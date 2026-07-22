@@ -8,48 +8,58 @@ import { useGSAP } from "@gsap/react"
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-export function Hero() {
-  const root = useRef<HTMLDivElement>(null)
+type HeroProps = {
+  animate?: boolean
+}
+
+export function Hero({ animate = false }: HeroProps) {
+  const root = useRef<HTMLElement>(null)
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
+      const section = root.current
+      if (!section) return
 
-      tl.from(".hero-eyebrow", { y: 20, opacity: 0, duration: 0.8 })
-        .from(
-          ".hero-line span",
-          { yPercent: 120, duration: 1.1, stagger: 0.08 },
-          "-=0.4",
-        )
-        .from(".hero-image", { scale: 1.15, opacity: 0, duration: 1.4 }, "-=1")
-        .from(".hero-meta > *", { y: 24, opacity: 0, duration: 0.8, stagger: 0.12 }, "-=0.8")
+      const q = gsap.utils.selector(section)
 
-      // Parallax drift on the product while scrolling
-      gsap.to(".hero-image", {
+      gsap.set(q(".hero-eyebrow"), { y: 20, opacity: 0 })
+      gsap.set(q(".hero-line-inner"), { yPercent: 120 })
+      gsap.set(q(".hero-image"), { scale: 1.15, opacity: 0 })
+      gsap.set(q(".hero-meta-item"), { y: 24, opacity: 0 })
+
+      if (animate) {
+        gsap
+          .timeline({ defaults: { ease: "power4.out" } })
+          .to(q(".hero-eyebrow"), { y: 0, opacity: 1, duration: 0.8 })
+          .to(q(".hero-line-inner"), { yPercent: 0, duration: 1.1, stagger: 0.08 }, "-=0.4")
+          .to(q(".hero-image"), { scale: 1, opacity: 1, duration: 1.4 }, "-=1")
+          .to(q(".hero-meta-item"), { y: 0, opacity: 1, duration: 0.8, stagger: 0.12 }, "-=0.8")
+      }
+
+      gsap.to(q(".hero-image"), {
         yPercent: 18,
         ease: "none",
         scrollTrigger: {
-          trigger: root.current,
+          trigger: section,
           start: "top top",
           end: "bottom top",
           scrub: true,
         },
       })
 
-      // Headline drifts up slightly faster for depth
-      gsap.to(".hero-headline", {
+      gsap.to(q(".hero-headline"), {
         yPercent: -12,
         opacity: 0.2,
         ease: "none",
         scrollTrigger: {
-          trigger: root.current,
+          trigger: section,
           start: "top top",
           end: "bottom top",
           scrub: true,
         },
       })
     },
-    { scope: root },
+    { scope: root, dependencies: [animate] },
   )
 
   return (
@@ -60,7 +70,6 @@ export function Hero() {
         </p>
       </div>
 
-      {/* Product image centered behind the headline */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="hero-image relative aspect-square w-[88vw] max-w-[720px]">
           <Image
@@ -77,20 +86,20 @@ export function Hero() {
       <div className="hero-headline relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10">
         <h1 className="font-serif text-[18vw] leading-[0.82] tracking-tight text-foreground md:text-[15vw]">
           <span className="hero-line block overflow-hidden">
-            <span className="block">Beyer</span>
+            <span className="hero-line-inner block">Beyer</span>
           </span>
           <span className="hero-line block overflow-hidden text-right italic text-muted-foreground">
-            <span className="block">dynamic</span>
+            <span className="hero-line-inner block">dynamic</span>
           </span>
         </h1>
       </div>
 
       <div className="hero-meta relative z-10 mx-auto mt-8 flex w-full max-w-7xl flex-col gap-6 px-6 md:flex-row md:items-end md:justify-between md:px-10">
-        <p className="max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground">
+        <p className="hero-meta-item max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground">
           A study in precision acoustics. Hand-assembled in matte black aluminum, tuned for the
           uncompromising listener.
         </p>
-        <div className="flex items-center gap-8">
+        <div className="hero-meta-item flex items-center gap-8">
           <div>
             <p className="font-serif text-3xl text-foreground">$1,290</p>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Limited release</p>
