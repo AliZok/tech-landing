@@ -25,27 +25,31 @@ export function PageIntro({ onFinish }: PageIntroProps) {
       if (!overlay) return
 
       const q = gsap.utils.selector(overlay)
+      const chars = q(".intro-char")
+      const content = q(".intro-content")
 
-      gsap.set(q(".intro-char"), { yPercent: 110 })
+      gsap.set(chars, { yPercent: 110 })
       gsap.set(q(".intro-designed"), { opacity: 0, y: 12 })
       gsap.set(q(".intro-by-word"), { opacity: 0, letterSpacing: "0.6em" })
       gsap.set(q(".intro-rule"), { scaleX: 0 })
+      gsap.set(content, { visibility: "visible" })
 
       const tl = gsap.timeline({
         defaults: { ease: "power4.out" },
         onComplete: () => setDone(true),
       })
 
-      tl.to(q(".intro-char"), {
-        yPercent: 0,
-        duration: 0.9,
-        stagger: 0.04,
-      })
-        .to(q(".intro-designed"), { opacity: 1, y: 0, duration: 0.6 }, "-=0.35")
+      tl.to(q(".intro-designed"), { opacity: 1, y: 0, duration: 0.6 })
         .to(q(".intro-by-word"), { opacity: 1, letterSpacing: "0.2em", duration: 0.7 }, "-=0.2")
+        .fromTo(
+          chars,
+          { yPercent: 110 },
+          { yPercent: 0, duration: 0.9, stagger: 0.04 },
+          "-=0.15",
+        )
         .to(q(".intro-rule"), { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, "-=0.3")
         .to({}, { duration: 1.4 })
-        .to(q(".intro-content"), { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" })
+        .to(content, { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" })
         .add(() => {
           document.body.style.overflow = ""
           onFinish?.()

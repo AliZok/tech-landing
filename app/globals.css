@@ -179,3 +179,8 @@
     color: transparent;
   }
 }
+
+/* Prevent intro FOUC: content stays hidden until GSAP arms it */
+.intro-content {
+  visibility: hidden;
+}
