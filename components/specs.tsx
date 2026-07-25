@@ -23,12 +23,19 @@ export function Specs() {
 
   useGSAP(
     () => {
-      gsap.from(".specs-heading-line", {
-        yPercent: 110,
-        duration: 1,
-        ease: "power4.out",
-        scrollTrigger: { trigger: ".specs-header", start: "top 80%" },
-      })
+      gsap.fromTo(
+        ".specs-heading-char",
+        { yPercent: 120, rotateX: -70, opacity: 0 },
+        {
+          yPercent: 0,
+          rotateX: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.04,
+          ease: "power4.out",
+          scrollTrigger: { trigger: ".specs-header", start: "top 80%" },
+        },
+      )
 
       gsap.fromTo(
         ".specs-desc",
@@ -149,8 +156,18 @@ export function Specs() {
       />
 
       <div className="specs-header relative mb-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <h2 className="overflow-hidden font-serif text-5xl text-foreground md:text-7xl">
-          <span className="specs-heading-line block">Specifications</span>
+        <h2
+          className="overflow-hidden font-serif text-5xl text-foreground md:text-7xl"
+          style={{ perspective: 800 }}
+        >
+          {"Specifications".split("").map((char, i) => (
+            <span
+              key={i}
+              className="specs-heading-char inline-block origin-bottom will-change-transform"
+            >
+              {char}
+            </span>
+          ))}
         </h2>
         <p className="specs-desc max-w-xs text-pretty text-sm leading-relaxed text-muted-foreground">
           Measured in our anechoic chamber. No software correction, no compromise.
