@@ -59,12 +59,12 @@ export function Gallery() {
                 sizes="(max-width: 768px) 100vw, 60vw"
                 className="object-contain"
               />
-            </div>
-            <div className="absolute bottom-10 left-6 md:left-10">
-              <p className="font-serif text-5xl text-foreground md:text-7xl">{slide.label}</p>
-              <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                {slide.caption}
-              </p>
+              <div className="absolute -bottom-14 left-0 md:-bottom-16">
+                <p className="font-serif text-5xl text-foreground md:text-7xl">{slide.label}</p>
+                <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  {slide.caption}
+                </p>
+              </div>
             </div>
             <span className="absolute right-6 top-1/2 font-mono text-xs text-muted-foreground md:right-10">
               0{i + 1} / 03

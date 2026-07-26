@@ -32,13 +32,24 @@ export function CraftShowcase() {
   useGSAP(
     () => {
       gsap.utils.toArray<HTMLElement>(".craft-item").forEach((item) => {
-        gsap.from(item, {
-          y: 40,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: item, start: "top 80%" },
-        })
+        gsap.set(item, { y: 140, opacity: 0 })
+
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              end: "top 15%",
+              scrub: 0.6,
+            },
+          })
+          .fromTo(
+            item,
+            { y: 140, opacity: 0 },
+            { y: 0, opacity: 1, ease: "none", duration: 1 },
+          )
+          .to(item, { y: 0, opacity: 1, ease: "none", duration: 0.6 })
+          .to(item, { y: -140, opacity: 0, ease: "none", duration: 1 })
       })
 
       gsap.to(".craft-image", {
