@@ -12,13 +12,24 @@ export function CtaFooter() {
 
   useGSAP(
     () => {
-      gsap.from(".cta-line span", {
-        yPercent: 120,
-        duration: 1,
-        stagger: 0.12,
-        ease: "power4.out",
-        scrollTrigger: { trigger: root.current, start: "top 70%" },
-      })
+      const left = root.current?.querySelector<HTMLElement>(".cta-from-left")
+      const right = root.current?.querySelector<HTMLElement>(".cta-from-right")
+      if (!left || !right) return
+
+      gsap.set(left, { xPercent: -55 })
+      gsap.set(right, { xPercent: 55 })
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 80%",
+            end: "top 25%",
+            scrub: 1,
+          },
+        })
+        .to(left, { xPercent: 0, ease: "none" }, 0)
+        .to(right, { xPercent: 0, ease: "none" }, 0)
     },
     { scope: root },
   )
@@ -26,12 +37,12 @@ export function CtaFooter() {
   return (
     <footer id="cta" ref={root} className="border-t border-border">
       <div className="mx-auto max-w-7xl px-6 py-32 md:px-10 md:py-48">
-        <h2 className="font-serif leading-[0.85] tracking-tight text-foreground">
-          <span className="cta-line block overflow-hidden text-[16vw] md:text-[11vw]">
-            <span className="block">Hear it</span>
+        <h2 className="overflow-hidden font-serif leading-[0.85] tracking-tight text-foreground">
+          <span className="cta-from-left block text-[16vw] md:text-[11vw]">
+            Hear it
           </span>
-          <span className="cta-line block overflow-hidden text-right text-[16vw] italic text-muted-foreground md:text-[11vw]">
-            <span className="block">all.</span>
+          <span className="cta-from-right block text-right text-[16vw] italic text-muted-foreground md:text-[11vw]">
+            all.
           </span>
         </h2>
 
